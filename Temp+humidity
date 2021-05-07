@@ -1,0 +1,91 @@
+// measure temperature and humidity 
+// set range and get alert with  3 LED's
+
+#include "DHT.h"
+
+// define pin for data
+#define DHTPIN 2
+
+const int ledPinYellow  = 4;
+const int ledPinBlue    = 5;
+const int ledPinRed     = 6;
+
+int tooCold = 20.00; // set min temperature lvl -> activates BLUE LED
+int tooHot = 28.00; // set max temp lvl -> activates RED LED
+
+int tooDry = 55.00;  // set min humidity lvl -> activates YELLOW LED
+int tooHumid = 85.00; // set max humidity lvl -> YELLOW LED blinks
+
+int pulseLed = 200; // delay for yellow pulse
+
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  dht.begin();
+
+  pinMode(ledPinYellow, OUTPUT);
+  pinMode(ledPinBlue, OUTPUT);
+  pinMode(ledPinRed, OUTPUT);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+  float humi = dht.readHumidity();
+  float tempC = dht.readTemperature();
+
+  delay(1000);
+
+  //check for fail
+
+  if (isnan(humi) || isnan(tempC) ) {
+    Serial.println("Failed to read from DHT sensor!");
+  } else {
+    Serial.print("Humidity: ");
+    Serial.print(humi);
+    Serial.print("%");
+
+    Serial.print("  |  "); 
+
+    Serial.print("Temperature: ");
+    Serial.print(tempC);
+    Serial.print("°C ");
+
+    Serial.println(" ");
+
+  }
+
+  if(tempC <= tooCold){
+    Serial.println("temp too low");
+    digitalWrite(ledPinBlue, 255);
+    }
+
+  if(tempC >= tooHot){
+    Serial.println("temp too high");
+    digitalWrite(ledPinRed, 255);
+    }
+
+  if(humi <= tooDry){
+    Serial.println("humidity too low");
+    digitalWrite(ledPinYellow, 255);
+    }
+
+   if(humi >= tooHumid){
+    Serial.println("humidity too high");
+     digitalWrite(ledPinYellow, 0);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 255);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 0);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 255);
+    delay(pulseLed);
+    }
+  
+}
