@@ -1,14 +1,11 @@
-// measure temperature and humidity 
-// set range and get alert with  3 LED's
-
 #include "DHT.h"
 
 // define pin for data
 #define DHTPIN 2
 
-const int ledPinYellow  = 4;
-const int ledPinBlue    = 5;
-const int ledPinRed     = 6;
+const int ledPinYellow   = 4;
+const int ledPinBlue  = 5;
+const int ledPinRed  = 6;
 
 int tooCold = 20.00; // set min temperature lvl -> activates BLUE LED
 int tooHot = 28.00; // set max temp lvl -> activates RED LED
@@ -88,4 +85,8 @@ void loop() {
     delay(pulseLed);
     }
 
+   if(humi <= tooHumid -1 && humi >= tooDry + 1){
+    Serial.println("humidity fine");
+     digitalWrite(ledPinYellow, 0);
+    }
 }
