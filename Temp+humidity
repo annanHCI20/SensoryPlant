@@ -62,11 +62,17 @@ void loop() {
     Serial.println("temp too low");
     digitalWrite(ledPinBlue, 255);
     }
+    else {
+       digitalWrite(ledPinBlue, 0);
+      }
 
   if(tempC >= tooHot){
     Serial.println("temp too high");
     digitalWrite(ledPinRed, 255);
     }
+      else {
+       digitalWrite(ledPinRed, 0);
+      }
 
   if(humi <= tooDry){
     Serial.println("humidity too low");
