@@ -1,0 +1,134 @@
+#include "DHT.h"
+#include <Servo.h>
+
+// define pin for data
+#define DHTPIN 2
+
+const int ledPinYellow   = 4;
+const int ledPinBlue  = 5;
+const int ledPinRed  = 6;
+
+const int SERVO_PIN = 9; // Arduino pin connected to Servo Motor's pin
+const int away = 30; // servo position open
+const int touching = 8; // servo position closed 
+
+Servo servo; // create servo object to control a servo
+
+int tooCold = 20.00; // set min temperature lvl -> activates BLUE LED
+int tooHot = 28.00; // set max temp lvl -> activates RED LED
+
+int tooDry = 65.00;  // set min humidity lvl -> activates YELLOW LED
+int tooHumid = 85.00; // set max humidity lvl -> YELLOW LED blinks
+
+int pulseLed = 200; // delay for yellow pulse
+
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  dht.begin();
+
+  pinMode(ledPinYellow, OUTPUT);
+  pinMode(ledPinBlue, OUTPUT);
+  pinMode(ledPinRed, OUTPUT);
+ 
+
+  //arrange SERVO
+  servo.attach(SERVO_PIN);   // attaches the servo on pin 9 to the servo object
+  servo.write(away);
+  delay(5000);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+  float humi = dht.readHumidity();
+  float tempC = dht.readTemperature();
+
+  delay(6000);
+
+  //check for fail
+
+  if (isnan(humi) || isnan(tempC) ) {
+    Serial.println("Failed to read from DHT sensor!");
+  } else {
+    Serial.print("Humidity: ");
+    Serial.print(humi);
+    Serial.print("%");
+
+    Serial.print("  |  "); 
+
+    Serial.print("Temperature: ");
+    Serial.print(tempC);
+    Serial.print("°C ");
+
+    Serial.println(" ");
+
+  }
+
+  if(tempC <= tooCold){
+    Serial.println("temp too low");
+    digitalWrite(ledPinBlue, 255);
+    }
+    else {
+       digitalWrite(ledPinBlue, 0);
+      }
+
+  if(tempC >= tooHot){
+    Serial.println("temp too high");
+    digitalWrite(ledPinRed, 255);
+    }
+      else {
+       digitalWrite(ledPinRed, 0);
+      }
+
+  if(humi <= tooDry){
+    Serial.println("humidity too low");
+    digitalWrite(ledPinYellow, 255);
+
+    //   start the servo + vapour 
+     servo.write(away);
+     delay(250);  
+     servo.write(touching);
+     delay (250);
+     servo.write(away);
+     Serial.println("humidifyier ON");
+
+     delay(30000);
+
+     //   stop vapour 
+
+     servo.write(touching);
+     delay (250);
+     servo.write(away);
+     delay(500);    
+     servo.write(touching);
+     delay(250);
+     servo.write(away);
+     Serial.println("humidifyier OFF");
+  
+    }
+
+
+   if(humi >= tooHumid){
+    Serial.println("humidity too high");
+     digitalWrite(ledPinYellow, 0);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 255);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 0);
+    delay(pulseLed);
+     digitalWrite(ledPinYellow, 255);
+    delay(pulseLed);
+    }
+
+   if(humi <= tooHumid -1 && humi >= tooDry + 1){
+    Serial.println("humidity fine");
+     digitalWrite(ledPinYellow, 0);
+    }
+}
