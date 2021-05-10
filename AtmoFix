@@ -91,20 +91,21 @@ void loop() {
     Serial.println("humidity too low");
     digitalWrite(ledPinYellow, 255);
 
-    //   start the servo + vapour 
-     servo.write(away);
-     delay(250);  
+    //   start the servo + vapour  
      servo.write(touching);
      delay (250);
      servo.write(away);
+     delay(500);
+     servo.write(touching);
+     delay (250);
+     servo.write(away);
+     
      Serial.println("humidifyier ON");
 
      delay(30000);
 
      //   stop vapour 
-
-     servo.write(away);
-     delay(500);    
+   
      servo.write(touching);
      delay(250);
      servo.write(away);
