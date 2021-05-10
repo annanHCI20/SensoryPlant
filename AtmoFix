@@ -103,8 +103,6 @@ void loop() {
 
      //   stop vapour 
 
-     servo.write(touching);
-     delay (250);
      servo.write(away);
      delay(500);    
      servo.write(touching);
