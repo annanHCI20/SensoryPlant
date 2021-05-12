@@ -115,7 +115,7 @@ void loop() {
      Serial.println("servo pos : ");
      Serial.println(away); 
      
-     Serial.println("humidifyier ON");
+     Serial.println("humidify ON");
 
      delay(30000);
 
@@ -124,7 +124,7 @@ void loop() {
      servo.write(touching);
      delay(150);
      servo.write(away);
-     Serial.println("humidifyier OFF");
+     Serial.println("humidify OFF");
   
     }
 
@@ -157,7 +157,7 @@ void loop() {
      servo.write(away);
      Serial.println("servo pos : ");
      Serial.println(away); 
-     Serial.println("humidifyier OFF?");
+     Serial.println("humidify OFF?");
      delay(30000);
     }
    
