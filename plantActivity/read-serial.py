@@ -1,6 +1,6 @@
 import serial
 
-arduino_port = "/dev/cu.usbmodem14201"  # serial port of Arduino
+arduino_port = "/dev/cu.usbmodem14401"  # serial port of Arduino
 baud = 115200  # arduino uno runs at 9600 baud
 fileName = "analog-data.csv"  # name of the CSV file generated
 
